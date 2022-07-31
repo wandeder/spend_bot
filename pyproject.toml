@@ -7,6 +7,7 @@ authors = ["Dmitrii Morozov <33morozov@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 aiogram = "^2.21"
+python-dotenv = "^0.20.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
