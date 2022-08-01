@@ -1,7 +1,7 @@
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
-
+from spend_bot.sheets import save_to_sheet
 # Names categories of spending and names currency
 categories_names = ['Еда', 'Транспорт', 'Крупные покупки',
                     'Жилье', 'Другое', 'Доходы']
@@ -17,7 +17,7 @@ class RegisterSpend(StatesGroup):
 async def start_bot(message: types.Message, state: FSMContext):
     await state.finish()
     if not message.text.isdigit():
-        await message.answer('Введи нормальное число!')
+        await message.answer(message.chat.id, 'Введи нормальное число!')
         return
     await state.update_data(value=int(message.text))
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -47,7 +47,8 @@ async def chose_category(message: types.Message, state: FSMContext):
     await state.update_data(category=message.text)
     # данные записи траты для записи в таблицу
     user_data = await state.get_data()
-    await message.answer(f"""Твои траты: {user_data} записаны.\n"""
+    save_to_sheet(user_data)
+    await message.answer(f"""Твои траты записаны.\n"""
                           """Постарайся тратить меньше!""",
                          reply_markup=types.ReplyKeyboardRemove()
                         )
