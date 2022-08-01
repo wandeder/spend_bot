@@ -8,6 +8,8 @@ authors = ["Dmitrii Morozov <33morozov@gmail.com>"]
 python = "^3.9"
 aiogram = "^2.21"
 python-dotenv = "^0.20.0"
+pygsheets = "^2.0.5"
+DateTime = "^4.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
