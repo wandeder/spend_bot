@@ -7,7 +7,7 @@ def save_to_sheet(data):
     LINK_SHEET = os.getenv('LINK_SHEET')
     gc = pygsheets.authorize(service_account_env_var = 'GDRIVE_API_CREDENTIALS')
     worksheet = gc.open_by_url(LINK_SHEET).sheet1
-    data['datetime'] = datetime.today().strftime('%d.%m.%Y %H:%M:%S')
+    data['datetime'] = datetime.today().strftime('%d.%m.%Y %H:%M')
     record = []
     record.append(data.get('datetime'))
     record.append(data.get('value'))
