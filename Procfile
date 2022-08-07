@@ -1,1 +1,1 @@
-web: python bot.py
+worker: python spend_bot.bot.py
