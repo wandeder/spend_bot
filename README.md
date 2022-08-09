@@ -1,1 +1,1 @@
-[![Maintainability](https://api.codeclimate.com/v1/badges/fcfd776ad10b72b22e3e/maintainability)](https://codeclimate.com/github/Morozov33/spend_bot/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/fcfd776ad10b72b22e3e/maintainability)](https://codeclimate.com/github/Morozov33/spend_bot/maintainability) [![workflow-test](https://github.com/Morozov33/spend_bot/actions/workflows/workflow-test.yml/badge.svg)](https://github.com/Morozov33/spend_bot/actions/workflows/workflow-test.yml)
