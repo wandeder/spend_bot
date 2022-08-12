@@ -30,7 +30,7 @@ class RegisterSpend(StatesGroup):
     waiting_category = State()
 
 
-@dp.message_handler(commands='start')
+@dp.message_handler(commands='start', state='*')
 async def start(message: types.Message, state: FSMContext):
     await state.finish()
     await message.answer(
@@ -56,7 +56,7 @@ async def start_bot(message: types.Message, state: FSMContext):
 @dp.message_handler(state=RegisterSpend.waiting_currency)
 async def chose_currency(message: types.Message, state: FSMContext):
     if message.text not in currency_names:
-        await message.answer('Выбери валюту, я сказал!')
+        await message.answer('Выбери валюту!')
         return
     await state.update_data(currency=message.text)
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -70,7 +70,7 @@ async def chose_currency(message: types.Message, state: FSMContext):
 @dp.message_handler(state=RegisterSpend.waiting_category)
 async def chose_category(message: types.Message, state: FSMContext):
     if message.text not in categories_names:
-        await message.answer('Выбери уже категорию!')
+        await message.answer('Выбери категорию!')
         return
     await state.update_data(category=message.text)
     # Данные о трате для записи в таблицу
