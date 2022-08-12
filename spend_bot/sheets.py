@@ -15,5 +15,7 @@ def save_to_sheet(data):
     record.append(data.get('value'))
     record.append(data.get('currency'))
     record.append(data.get('category'))
+    record.append(data.get('comment'))
+
     index = len(worksheet.get_col(1, include_tailing_empty=False)) + 1
     worksheet.update_row(index, record)
