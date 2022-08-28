@@ -37,7 +37,7 @@ async def start(message: types.Message, state: FSMContext):
     await state.finish()
     await message.answer(
             'Запиши свои траты:',
-            reply_markup=types.ReplyKeyboardRemove()
+            reply_markup=types.ReplyKeyboardRemove(),
             )
 
 
@@ -65,8 +65,10 @@ async def chose_currency(message: types.Message, state: FSMContext):
     for category in categories_names:
         keyboard.add(category)
     await RegisterSpend.waiting_category.set()
-    await message.answer('Теперь выбери категорию трат:',
-                         reply_markup=keyboard)
+    await message.answer(
+            'Теперь выбери категорию трат:',
+            reply_markup=keyboard,
+            )
 
 
 @dp.message_handler(state=RegisterSpend.waiting_category)
@@ -76,7 +78,10 @@ async def chose_category(message: types.Message, state: FSMContext):
         return
     await state.update_data(category=message.text)
     await RegisterSpend.waiting_comment.set()
-    await message.answer('Введи комментарий:')
+    await message.answer(
+            'Введи комментарий:',
+            reply_markup=types.ReplyKeyboardRemove(),
+            )
 
 
 @dp.message_handler(state=RegisterSpend.waiting_comment)
