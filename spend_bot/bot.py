@@ -79,51 +79,17 @@ async def chose_category(message: types.Message, state: FSMContext):
     buttons = ['Да', 'Нет']
     keyboard.add(*buttons)
     await RegisterSpend.waiting_comment.set()
-    await message.answer('Нужен комментарий?',
+    await message.answer('Введи комментарий:',
                          reply_markup=keyboard)
 
 
 @dp.message_handler(state=RegisterSpend.waiting_comment)
 async def comment(message: types.Message, state: FSMContext):
-    if message.text not in ['Да', 'Нет']:
-        await message.answer('Неправильный ответ! Выбери "Да" или "Нет":')
-        return
-    elif message.text == 'Да':
-        await message.answer('Ваш комментарий:',
-                             reply_markup=types.ReplyKeyboardRemove()
-                             )
-        await RegisterSpend.waiting_record.set()
-    elif message.text == 'Нет':
-        await state.update_data(comment='Нет комментария')
-        # Данные о трате для записи в таблицу
-        user_data = await state.get_data()
-
-        # Запись в Google таблицу
-        save_to_sheet(user_data)
-
-        await message.answer("Траты записаны.",
-                             reply_markup=types.ReplyKeyboardRemove()
-                             )
-        await message.bot.send_message(os.getenv('CHAT_ID'),
-                                       text=get_text(user_data)
-                                       )
-        await state.finish()
-        await message.answer(
-                'Запиши свои траты:',
-                reply_markup=types.ReplyKeyboardRemove()
-                )
-
-
-@dp.message_handler(state=RegisterSpend.waiting_record)
-async def record(message: types.Message, state: FSMContext):
-    await state.update_data(comment=message.text.capitalize())
-
+    await state.update_data(comment=message.text)
     # Данные о трате для записи в таблицу
     user_data = await state.get_data()
-
     # Запись в Google таблицу
     save_to_sheet(user_data)
-
     await message.answer("Траты записаны.",
                          reply_markup=types.ReplyKeyboardRemove()
                          )
