@@ -75,12 +75,8 @@ async def chose_category(message: types.Message, state: FSMContext):
         await message.answer('Выбери категорию!')
         return
     await state.update_data(category=message.text)
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    buttons = ['Да', 'Нет']
-    keyboard.add(*buttons)
     await RegisterSpend.waiting_comment.set()
-    await message.answer('Введи комментарий:',
-                         reply_markup=keyboard)
+    await message.answer('Введи комментарий:')
 
 
 @dp.message_handler(state=RegisterSpend.waiting_comment)
