@@ -18,9 +18,9 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 # Настройка логирования в stdout
 logging.basicConfig(level=logging.INFO)
 
-# Names categories of spending and names currency
+# Список категорий трат и доступных валют
 categories_names = ['Еда', 'Транспорт', 'Крупные покупки',
-                    'Жилье', 'Другое', 'Доходы']
+                    'Жилье', 'Другое', 'Учеба', 'Доходы', 'Обмен']
 currency_names = ['Лиры', 'Рубли', 'Доллары', 'Евро']
 
 
