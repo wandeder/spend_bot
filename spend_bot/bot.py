@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Список категорий трат и доступных валют
 categories_names = ['Еда', 'Транспорт', 'Крупные покупки',
-                    'Жилье', 'Другое', 'Учеба', 'Доходы', 'Обмен']
+                    'Жилье', 'Другое', 'Учеба', 'Связь', 'Доходы', 'Обмен']
 currency_names = ['Лиры', 'Рубли', 'Доллары', 'Евро']
 
 
@@ -91,17 +91,10 @@ async def comment(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
     # Запись в Google таблицу
     save_to_sheet(user_data)
-    await message.answer("Траты записаны.",
-                         reply_markup=types.ReplyKeyboardRemove()
-                         )
     await message.bot.send_message(os.getenv('CHAT_ID'),
                                    text=get_text(user_data)
                                    )
     await state.finish()
-    await message.answer(
-            'Запиши свои траты:',
-            reply_markup=types.ReplyKeyboardRemove()
-            )
 
 
 # Сгенерировать сообщение о тратах в чат
