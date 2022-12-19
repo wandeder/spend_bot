@@ -44,15 +44,18 @@ async def start(message: types.Message, state: FSMContext):
 @dp.message_handler()
 async def start_bot(message: types.Message, state: FSMContext):
     await state.finish()
-    if not message.text.isdigit():
+    try:
+        spend = float(message.text.replace(',', '.'))
+    except ValueError:
         await message.answer('Введи нормальное число!')
         return
-    await state.update_data(value=int(message.text))
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    for name in currency_names:
-        keyboard.add(name)
-    await RegisterSpend.waiting_currency.set()
-    await message.answer("Выбери валюту:", reply_markup=keyboard)
+    else:
+        await state.update_data(value=spend)
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        for name in currency_names:
+            keyboard.add(name)
+        await RegisterSpend.waiting_currency.set()
+        await message.answer("Выбери валюту:", reply_markup=keyboard)
 
 
 @dp.message_handler(state=RegisterSpend.waiting_currency)
