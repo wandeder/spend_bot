@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.INFO)
 # Список категорий трат и доступных валют
 categories_names = ['Еда', 'Транспорт', 'Крупные покупки',
                     'Жилье', 'Другое', 'Учеба', 'Связь', 'Доходы', 'Обмен']
-currency_names = ["Драмы", "Рубли", 'Доллары', 'Евро', 'Лиры']
+currency_names = ["Лари", "Рубли", 'Доллары', 'Евро', 'Лиры']
 
 
 class RegisterSpend(StatesGroup):
