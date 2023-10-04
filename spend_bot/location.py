@@ -30,7 +30,7 @@ def get_location_reply(location):
 
     )
     if country.get("Components")[0].get("kind") == "country":
-        result["Страна"] = country.get("name")
+        result["Страна"] = country.get("Components")[0].get("name")
 
     country_code = country.get("country_code")
 
