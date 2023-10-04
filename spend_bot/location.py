@@ -45,7 +45,7 @@ def get_location_reply(location):
 
     fixer_url = "https://openexchangerates.org/api/latest.json"
     fixer_query = {
-        "api_id": os.getenv("FIXER_KEY"),
+        "app_id": os.getenv("FIXER_KEY"),
         "base": "USD",
     }
     usd_convert_list = requests.get(fixer_url, params=fixer_query).json()
