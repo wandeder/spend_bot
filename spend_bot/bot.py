@@ -52,10 +52,7 @@ async def country(message: types.Message, state: FSMContext):
 
 @dp.message_handler(content_types=['location'])
 async def handle_location(message: types.Message):
-    lat = message.location.latitude
-    lon = message.location.longitude
-    reply = f"latitude: {lat}\nlongitude: {lon}\n{message}"
-    await message.answer(reply, reply_markup=types.ReplyKeyboardRemove())
+    await message.answer(get_location_reply(message.location), reply_markup=types.ReplyKeyboardRemove())
 
 
 @dp.message_handler()
