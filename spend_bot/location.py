@@ -19,7 +19,7 @@ def get_location_reply(location):
 
     response = requests.get(url_geo_yandex, params=query)
 
-    data = response.json()
+    data = response.json().get("response")
     country = (
         data.get("GeoObjectCollection")
         .get("featureMember")[0]
