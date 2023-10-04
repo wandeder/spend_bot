@@ -14,9 +14,9 @@ def get_location_reply(location):
         "format": "json",
     }
     result = {
-        "Страна": "",
-        "Валюта": "",
-        "Код валюты": "",
+        "Страна: ": "",
+        "Валюта: ": "",
+        "Код валюты: ": "",
         "10 USD = ": 0,
         "1000 RUB = ": 0,
     }
@@ -34,14 +34,14 @@ def get_location_reply(location):
 
     )
     if country.get("Components")[0].get("kind") == "country":
-        result["Страна"] = country.get("Components")[0].get("name")
+        result["Страна: "] = country.get("Components")[0].get("name")
 
         dadata = Dadata(os.getenv("DADATA_KEY"))
-        currency = dadata.suggest("currency", result["Страна"])[0]
+        currency = dadata.suggest("currency", result["Страна: "])[0]
 
         if currency.get("data").get("name"):
-            result["Валюта"] = currency.get("data").get("name")
-            result["Код валюты"] = currency.get("data").get("strcode")
+            result["Валюта: "] = currency.get("data").get("name")
+            result["Код валюты: "] = currency.get("data").get("strcode")
 
     fixer_url = "https://openexchangerates.org/api/latest.json"
     fixer_query = {
@@ -49,8 +49,9 @@ def get_location_reply(location):
         "base": "USD",
     }
     usd_convert_list = requests.get(fixer_url, params=fixer_query).json()
-    usd_rates = usd_convert_list.get("rates").get(result["Код валюты"])
-    result["10 USD = "] = round(10 * usd_rates, 2)
-    result["1000 RUB = "] = round((1000 / usd_convert_list.get("rates").get("RUB")) * usd_rates, 2)
+    usd_rates = usd_convert_list.get("rates").get(result["Код валюты: "])
+    result["10 USD = "] = round(10 * usd_rates, 0)
+    result["1000 RUB = "] = round((1000 / usd_convert_list.get("rates").get("RUB")) * usd_rates, 0)
 
-    return result
+    res_str = [f"{key}{result[key]}\n" for key in result]
+    return "".join(res_str)
