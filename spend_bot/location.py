@@ -10,7 +10,6 @@ def get_location_reply(location):
         "geocode": f"{lat},{lon}",
         "apikey": os.getenv("YANDEX_GEO_KEY"),
         "format": "json",
-        "kind": "country",
     }
     result = {
         "Страна": None,
