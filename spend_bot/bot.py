@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.INFO)
 # Список категорий трат и доступных валют
 categories_names = ['Еда', 'Транспорт', 'Крупные покупки',
                     'Жилье', 'Другое', 'Учеба', 'Связь', 'Доходы', 'Обмен']
-currency_names = ["Тенге", "Рубли", 'Доллары', 'Евро', 'Лиры']
+currency_names = ["Донг", "Тенге", "Рубли", 'Доллары', 'Евро']
 
 
 class RegisterSpend(StatesGroup):
@@ -37,6 +37,15 @@ async def start(message: types.Message, state: FSMContext):
     await state.finish()
     await message.answer(
             'Запиши свои траты:',
+            reply_markup=types.ReplyKeyboardRemove(),
+            )
+
+
+@dp.message_handler(commands='country', state='*')
+async def country(message: types.Message, state: FSMContext):
+    await state.finish()
+    await message.answer(
+            'Поделись своей локацией:',
             reply_markup=types.ReplyKeyboardRemove(),
             )
 
