@@ -45,8 +45,12 @@ async def country(message: types.Message, state: FSMContext):
     await state.finish()
     await message.answer(
             'Поделись своей локацией:',
-            reply_markup=types.ReplyKeyboardRemove(),
+            reply_markup=types.ReplyKeyboardMarkup().add(types.KeyboardButton("Share location", request_location=True))
             )
+    lat = message.location.latitude
+    lon = message.location.longitude
+    reply = f"latitude: {lat}\nlongitude: {lon}\n{message.location}"
+    await message.answer(reply, reply_markup=types.ReplyKeyboardRemove())
 
 
 @dp.message_handler()
