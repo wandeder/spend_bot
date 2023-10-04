@@ -5,6 +5,8 @@ from aiogram import Bot, Dispatcher, types, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
+
+from spend_bot.location import get_location_reply
 from spend_bot.sheets import save_to_sheet
 
 
