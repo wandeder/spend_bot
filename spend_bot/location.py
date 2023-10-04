@@ -39,6 +39,6 @@ def get_location_reply(location):
         if currency.get("data").get("name"):
             result["Валюта"] = currency.get("data").get("name")
             result["Код валюты"] = currency.get("data").get("strcode")
-            result["test"] = dadata.suggest("country", result["Страна"])
+            result["test"] = dadata.suggest("currency", result["Страна"])
 
     return result
