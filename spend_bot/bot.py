@@ -19,9 +19,8 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 logging.basicConfig(level=logging.INFO)
 
 # Список категорий трат и доступных валют
-categories_names = ['Еда', 'Транспорт', 'Крупные покупки',
-                    'Жилье', 'Другое', 'Учеба', 'Связь', 'Доходы', 'Обмен']
-currency_names = ["Донг", "Тенге", "Рубли", 'Доллары', 'Евро']
+categories = [email.strip() for email in os.environ.get("CATEGORIES", "").split(",")]
+currencies = [email.strip() for email in os.environ.get("CURRENCIES", "").split(",")]
 
 
 class RegisterSpend(StatesGroup):
@@ -61,7 +60,7 @@ async def start_bot(message: types.Message, state: FSMContext):
     else:
         await state.update_data(value=spend)
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        for name in currency_names:
+        for name in currencies:
             keyboard.add(name)
         await RegisterSpend.waiting_currency.set()
         await message.answer("Выбери валюту:", reply_markup=keyboard)
@@ -69,12 +68,12 @@ async def start_bot(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=RegisterSpend.waiting_currency)
 async def chose_currency(message: types.Message, state: FSMContext):
-    if message.text not in currency_names:
+    if message.text not in currencies:
         await message.answer('Выбери валюту!')
         return
     await state.update_data(currency=message.text)
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    for category in categories_names:
+    for category in categories:
         keyboard.add(category)
     await RegisterSpend.waiting_category.set()
     await message.answer(
@@ -85,7 +84,7 @@ async def chose_currency(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=RegisterSpend.waiting_category)
 async def chose_category(message: types.Message, state: FSMContext):
-    if message.text not in categories_names:
+    if message.text not in categories:
         await message.answer('Выбери категорию!')
         return
     await state.update_data(category=message.text)
