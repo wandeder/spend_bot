@@ -12,14 +12,26 @@ def get_location_reply(location):
         "format": "json",
     }
     result = {
-        "Страна": None,
-        "Код": None,
-        "Валюта": None,
-        "Код валюты": None,
+        "Страна": "",
+        "Валюта": "",
+        "Код валюты": "",
     }
 
     response = requests.get(url_geo_yandex, params=query)
 
     data = response.json()
+    country = (
+        data.get("GeoObjectCollection")
+        .get("featureMember")[0]
+        .get("GeoObject")
+        .get("metaDataProperty")
+        .get("GeocoderMetaData")
+        .get("Address")
 
-    return data
+    )
+    if country.get("Components")[0].get("kind") == "country":
+        result["Страна"] = country.get("name")
+
+    country_code = country.get("country_code")
+
+    return result
