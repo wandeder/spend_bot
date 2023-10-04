@@ -54,7 +54,7 @@ async def country(message: types.Message, state: FSMContext):
 async def handle_location(message: types.Message):
     lat = message.location.latitude
     lon = message.location.longitude
-    reply = f"latitude: {lat}\nlongitude: {lon}\n{message.location}"
+    reply = f"latitude: {lat}\nlongitude: {lon}\n{message}"
     await message.answer(reply, reply_markup=types.ReplyKeyboardRemove())
 
 
