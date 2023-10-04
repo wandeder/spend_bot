@@ -7,7 +7,7 @@ def get_location_reply(location):
     lon = location.longitude
     query = {
         "results": "1",
-        "geocode": f"{lat},{lon}",
+        "geocode": f"{lon},{lat}",
         "apikey": os.getenv("YANDEX_GEO_KEY"),
         "format": "json",
     }
