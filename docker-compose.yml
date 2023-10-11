@@ -3,7 +3,7 @@ version: '3.9'
 services:
   spend_bot:
     networks:
-        - spent_bot_net
+        - spend_bot_net
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,10 +11,10 @@ services:
     env_file:
       - ./.env
     ports:
-      - "0000:0000"
+      - "80:80"
     restart: always
     entrypoint: ["python3", "-m", "spend_bot.bot"]
 
 networks:
-  web_network:
-    name: spent_bot_net
+  spend_bot_net:
+    name: spend_bot_net
