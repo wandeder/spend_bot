@@ -3,7 +3,7 @@ import os
 from dadata import Dadata
 
 def get_location_reply(location):
-    url_geo_yandex = "https://geocode-maps.yandex.ru/1.x/"
+    YANDEX_GEO_URL = os.getenv("YANDEX_GEO_URL", "")
     lat = location.latitude
     lon = location.longitude
     currency = {"data": {}}
@@ -21,7 +21,7 @@ def get_location_reply(location):
         "1000 RUB = ": 0,
     }
 
-    response = requests.get(url_geo_yandex, params=yandex_query)
+    response = requests.get(YANDEX_GEO_URL, params=yandex_query)
 
     data = response.json().get("response")
     country = (
@@ -43,12 +43,12 @@ def get_location_reply(location):
             result["Валюта: "] = currency.get("data").get("name")
             result["Код валюты: "] = currency.get("data").get("strcode")
 
-    fixer_url = "https://openexchangerates.org/api/latest.json"
+    FIXER_URL = os.getenv("FIXER_URL", "")
     fixer_query = {
         "app_id": os.getenv("FIXER_KEY"),
         "base": "USD",
     }
-    usd_convert_list = requests.get(fixer_url, params=fixer_query).json()
+    usd_convert_list = requests.get(FIXER_URL, params=fixer_query).json()
     usd_rates = usd_convert_list.get("rates").get(result["Код валюты: "])
     result["10 USD = "] = round(10 * usd_rates, 0)
     result["1000 RUB = "] = round((1000 / usd_convert_list.get("rates").get("RUB")) * usd_rates, 0)
