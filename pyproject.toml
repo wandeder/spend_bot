@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "spend_bot"
-version = "0.1.0"
-description = ""
+version = "1.0.0"
+description = "Simple Telegram bot for spend counting"
 authors = ["Dmitrii Morozov <33morozov@gmail.com>"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.9"
