@@ -4,18 +4,20 @@ from datetime import datetime
 
 
 def save_to_sheet(data):
-    LINK_SHEET = os.getenv('LINK_SHEET')
+    link_sheet = os.getenv('LINK_SHEET')
     gc = pygsheets.authorize(
             service_account_env_var='GDRIVE_API_CREDENTIALS'
             )
-    worksheet = gc.open_by_url(LINK_SHEET).worksheet_by_title('Траты')
+    worksheet = gc.open_by_url(link_sheet).worksheet_by_title('Траты')
     data['datetime'] = datetime.today().strftime('%d.%m.%Y')
-    record = []
-    record.append(data.get('datetime'))
-    record.append(data.get('value'))
-    record.append(data.get('currency'))
-    record.append(data.get('category'))
-    record.append(data.get('comment'))
+    record = [
+        data.get('datetime'),
+        data.get('value'),
+        data.get('currency'),
+        data.get('category'),
+        data.get('comment'),
+        data.get('bank'),
+    ]
 
     index = len(worksheet.get_col(1, include_tailing_empty=False)) + 1
     worksheet.update_row(index, record)

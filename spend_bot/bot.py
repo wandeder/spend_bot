@@ -10,19 +10,16 @@ from spend_bot.location import get_location_reply
 from spend_bot.sheets import save_to_sheet
 
 
-# Загрузка переменных окружения из .env
 load_dotenv()
 
-# Объявление и инициализация объектов бота и диспетчера
 bot = Bot(token=os.getenv('API_TOKEN'))
 dp = Dispatcher(bot, storage=MemoryStorage())
 
-# Настройка логирования в stdout
 logging.basicConfig(level=logging.INFO)
 
-# Список категорий трат и доступных валют
-categories = [email.strip() for email in os.environ.get("CATEGORIES", "").split(",")]
-currencies = [email.strip() for email in os.environ.get("CURRENCIES", "").split(",")]
+CATEGORIES = [category.strip() for category in os.environ.get("CATEGORIES", "").split(",")]
+CURRENCIES = [currency.strip() for currency in os.environ.get("CURRENCIES", "").split(",")]
+BANKS = [bank.strip() for bank in os.environ.get("BANKS", "").split(",")]
 
 
 class RegisterSpend(StatesGroup):
@@ -31,6 +28,7 @@ class RegisterSpend(StatesGroup):
     waiting_category = State()
     waiting_comment = State()
     waiting_record = State()
+    waiting_bank = State()
 
 
 @dp.message_handler(commands='start', state='*')
@@ -68,20 +66,21 @@ async def start_bot(message: types.Message, state: FSMContext):
     else:
         await state.update_data(value=spend)
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        for name in currencies:
+        for name in CURRENCIES:
             keyboard.add(name)
         await RegisterSpend.waiting_currency.set()
         await message.answer("Выбери валюту:", reply_markup=keyboard)
 
 
 @dp.message_handler(state=RegisterSpend.waiting_currency)
-async def chose_currency(message: types.Message, state: FSMContext):
-    if message.text not in currencies:
+async def choose_currency(message: types.Message, state: FSMContext):
+    if message.text not in CURRENCIES:
         await message.answer('Выбери валюту!')
         return
+
     await state.update_data(currency=message.text)
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    for category in categories:
+    for category in CATEGORIES:
         keyboard.add(category)
     await RegisterSpend.waiting_category.set()
     await message.answer(
@@ -91,10 +90,11 @@ async def chose_currency(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=RegisterSpend.waiting_category)
-async def chose_category(message: types.Message, state: FSMContext):
-    if message.text not in categories:
+async def choose_category(message: types.Message, state: FSMContext):
+    if message.text not in CATEGORIES:
         await message.answer('Выбери категорию!')
         return
+
     await state.update_data(category=message.text)
     await RegisterSpend.waiting_comment.set()
     await message.answer(
@@ -106,26 +106,39 @@ async def chose_category(message: types.Message, state: FSMContext):
 @dp.message_handler(state=RegisterSpend.waiting_comment)
 async def comment(message: types.Message, state: FSMContext):
     await state.update_data(comment=message.text)
-    # Данные о трате для записи в таблицу
-    user_data = await state.get_data()
-    # Запись в Google таблицу
-    save_to_sheet(user_data)
-    await message.bot.send_message(os.getenv('CHAT_ID'),
-                                   text=get_text(user_data)
-                                   )
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    for bank in banks:
+        keyboard.add(bank)
+    await RegisterSpend.waiting_bank.set()
+    await message.answer(
+        'Выбери банк:',
+        reply_markup=keyboard,
+    )
+
+
+@dp.message_handler(state=RegisterSpend.waiting_bank)
+async def choose_bank(message: types.Message, state: FSMContext):
+    if message.text not in BANKS:
+        await message.answer('Выбери банк!')
+        return
+
+    await state.update_data(bank=message.text)
+
+    # Get data
+    data = await state.get_data()
     await state.finish()
+    await message.bot.send_message(os.getenv('CHAT_ID'),
+                                   text=get_text(data)
+                                   )
+
+    # Write data into Google Sheet
+    save_to_sheet(data)
 
 
-# Сгенерировать сообщение о тратах в чат
+
 def get_text(data):
-    value = data['value']
-    currency = data['currency'].lower()
-    category = data['category'].lower()
-    if data['comment'] == 'Нет комментария':
-        comment = ''
-    else:
-        comment = f"{data['comment']}."
-    return f"{value} {currency} потрачено на {category}. {comment}"
+    return (f"{data.get('value')} {data.get('currency').lower()} потрачено на {data.get('category').lower()}."
+            f" {data.get('comment')}")
 
 
 if __name__ == '__main__':
