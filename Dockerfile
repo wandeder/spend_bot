@@ -10,8 +10,8 @@ RUN pip install poetry
 
 COPY ./pyproject.toml ./poetry.lock /app/
 
-RUN poetry install
+RUN poetry install --no-root
 
 COPY ./spend_bot /app/spend_bot
 
-ENTRYPOINT ["python3", "-m", "spend_bot.bot"]
+CMD ["poetry", "run", "python", "./spend_bot/bot.py"]
