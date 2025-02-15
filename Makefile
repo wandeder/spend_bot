@@ -10,3 +10,5 @@ logs: # container logs
 	docker logs -f spend_bot
 enter: # enter into container
 	docker exec -it spend_bot /bin/bash
+stop: # stop spend_bot
+	docker compose stop spend_bot

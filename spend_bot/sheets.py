@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 
-def save_to_sheet(data):
+async def save_to_sheet(data):
     link_sheet = os.getenv('LINK_SHEET')
     gc = pygsheets.authorize(
             service_account_env_var='GDRIVE_API_CREDENTIALS'

@@ -126,14 +126,13 @@ async def choose_bank(message: types.Message, state: FSMContext):
 
     # Get data
     data = await state.get_data()
-    await state.finish()
+    # Restart bot
+    await start(message, state)
+    # Write data into Google Sheet and chat
     await message.bot.send_message(os.getenv('CHAT_ID'),
                                    text=get_text(data)
                                    )
-
-    # Write data into Google Sheet
-    save_to_sheet(data)
-
+    await save_to_sheet(data)
 
 
 def get_text(data):
