@@ -13,5 +13,3 @@ COPY ./pyproject.toml ./poetry.lock /app/
 RUN poetry install --no-root
 
 COPY ./spend_bot /app/spend_bot
-
-CMD ["poetry", "run", "python", "./spend_bot/bot.py"]

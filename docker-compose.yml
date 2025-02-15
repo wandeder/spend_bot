@@ -13,7 +13,7 @@ services:
     ports:
       - "80:80"
     restart: always
-    entrypoint: ["python3", "-m", "spend_bot.bot"]
+    entrypoint: ["poetry", "run", "python", "-m", "spend_bot.bot"]
 
 networks:
   spend_bot_net:
