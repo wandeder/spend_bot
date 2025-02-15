@@ -107,7 +107,7 @@ async def choose_category(message: types.Message, state: FSMContext):
 async def comment(message: types.Message, state: FSMContext):
     await state.update_data(comment=message.text)
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    for bank in banks:
+    for bank in BANKS:
         keyboard.add(bank)
     await RegisterSpend.waiting_bank.set()
     await message.answer(
