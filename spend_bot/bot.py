@@ -96,20 +96,13 @@ async def choose_category(message: types.Message, state: FSMContext):
         return
 
     await state.update_data(category=message.text)
-    await RegisterSpend.waiting_comment.set()
-    await message.answer(
-            'Введи комментарий:',
-            reply_markup=types.ReplyKeyboardRemove(),
-            )
 
-
-@dp.message_handler(state=RegisterSpend.waiting_comment)
-async def comment(message: types.Message, state: FSMContext):
-    await state.update_data(comment=message.text)
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     for bank in BANKS:
         keyboard.add(bank)
+
     await RegisterSpend.waiting_bank.set()
+
     await message.answer(
         'Выбери банк:',
         reply_markup=keyboard,
@@ -123,6 +116,18 @@ async def choose_bank(message: types.Message, state: FSMContext):
         return
 
     await state.update_data(bank=message.text)
+
+    await RegisterSpend.waiting_comment.set()
+
+    await message.answer(
+            'Введи комментарий:',
+            reply_markup=types.ReplyKeyboardRemove(),
+            )
+
+
+@dp.message_handler(state=RegisterSpend.waiting_comment)
+async def comment(message: types.Message, state: FSMContext):
+    await state.update_data(comment=message.text)
 
     # Get data
     data = await state.get_data()
